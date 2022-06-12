@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'dart:convert';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class MStram extends StatefulWidget {
   const MStram({Key? key}) : super(key: key);
@@ -16,29 +16,31 @@ class _MStramState extends State<MStram> {
   FirebaseDatabase database = FirebaseDatabase.instance;
   DatabaseReference ref = FirebaseDatabase.instance.ref("/");
 
-  int func(var ab, var bc) {
-    print(ab);
-    print(bc);
-    return 1;
-  }
-
   final PopupController _popupController = PopupController();
-  MapController _mapController = MapController();
+  final MapController _mapController = MapController();
   double _zoom = 7;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    intiNot();
+  }
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
       builder: (context, AsyncSnapshot<DatabaseEvent?> snapshot) {
+        List<Marker> _markers = [];
+        List<LatLng> _latLngList = [];
         if (snapshot.connectionState == ConnectionState.active &&
             snapshot.hasData) {
-          List<Marker> _markers = [];
-          List<LatLng> _latLngList = [];
-          Map<Object?, Object?>? val =
-              snapshot.data!.snapshot.value as Map<Object?, Object?>;
-          print(val);
-          val.forEach(
-            (key, value) {
+          if ((snapshot.data!.snapshot.value != null)) {
+            display();
+            Map<Object?, Object?>? val =
+                snapshot.data!.snapshot.value as Map<Object?, Object?>;
+            print(val);
+            val.forEach((key, value) {
               var latlist = double.parse(
                   key.toString().split('_')[0].replaceRange(2, 3, '.'));
 
@@ -55,15 +57,18 @@ class _MStramState extends State<MStram> {
                         size: 60,
                         color: Colors.blueAccent,
                       )));
-            },
-          );
+            });
+          }
+
           return FlutterMap(
             mapController: _mapController,
             options: MapOptions(
                 // swPanBoundary: LatLng(13, 77.5),
                 // nePanBoundary: LatLng(13.07001, 77.58),
-                center: _latLngList[0],
-                bounds: LatLngBounds.fromPoints(_latLngList),
+                center: LatLng(12.9716, 77.5946),
+                bounds: _latLngList.isNotEmpty
+                    ? LatLngBounds.fromPoints(_latLngList)
+                    : null,
                 zoom: _zoom,
                 plugins: [
                   MarkerClusterPlugin(),
@@ -124,5 +129,47 @@ class _MStramState extends State<MStram> {
       },
       stream: ref.onValue,
     );
+  }
+
+  //////////////////////////////////////////////////Notification.//////////////////////////////////
+  ///
+  ///
+  ///
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+  AndroidInitializationSettings initializationSettingsAndroid =
+      const AndroidInitializationSettings('@mipmap/ic_launcher');
+
+  void intiNot() async {
+    final InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: (mv) => selectNotification(mv!));
+  }
+
+  /////
+  void selectNotification(String payload) async {
+    if (payload != null) {
+      debugPrint('notification payload: $payload');
+    }
+    await Navigator.push(
+      context,
+      MaterialPageRoute<void>(builder: (context) => MStram()),
+    );
+  }
+
+  void display() async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails('your channel id', 'your channel name',
+            channelDescription: 'your channel description',
+            importance: Importance.max,
+            priority: Priority.high,
+            ticker: 'ticker');
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+        0, "Emergency", "New Crime Has been detected", platformChannelSpecifics,
+        payload: 'item x');
   }
 }

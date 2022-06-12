@@ -58,6 +58,7 @@
 
 
 import 'package:crimdetect/map.dart';
+import 'package:crimdetect/noti.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -135,9 +136,10 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Map'),
+        title: Text('CrimeMap'),
       ),
       body: MStram(),
+      // body: Notify(),
       // body: FlutterMap(
       //   mapController: _mapController,
       //   options: MapOptions(

@@ -39,6 +39,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_database: ^9.0.15
   firebase_core: ^1.17.1
+  flutter_local_notifications: ^9.6.0
 
 dev_dependencies:
   flutter_test:
