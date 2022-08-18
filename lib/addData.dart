@@ -146,11 +146,14 @@ class MyCustomFormState extends State<MyCustomForm> {
                         ),
                       ),
 
-
-                      Padding(
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                            Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10.0, vertical: 16.0),
                         child: ElevatedButton(
+                          style:ElevatedButton.styleFrom(primary: Color.fromARGB(255, 234, 177, 4),fixedSize: Size(100, 50)),
                           onPressed: () {
                            
                             if (_formKey.currentState!.validate()) {
@@ -176,6 +179,26 @@ class MyCustomFormState extends State<MyCustomForm> {
                           child:const Text('Add'),
                         ),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10.0, vertical: 16.0),
+                        child: ElevatedButton(
+                          style:ElevatedButton.styleFrom(primary: Color.fromARGB(255, 234, 177, 4),fixedSize: Size(100, 50)),
+
+                          onPressed: () {
+                           
+                         
+                                Navigator.of(context).pop();
+
+                            
+                          },
+                          child:const Text('Cancel'),
+                        ),
+                      ),
+                      ],)
+
+
+                      
                     ],
                   ),
                 ),

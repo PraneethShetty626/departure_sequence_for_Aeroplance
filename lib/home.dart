@@ -115,7 +115,7 @@ class _HomeState extends State<Home> {
                   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    cont2(Text("tsat : ${d.tsat}")),
+                    cont2(Text("TSAT : ${d.tsat}")),
         
                     cont2(Text("Runway : ${d.runway}")),
         
@@ -158,7 +158,7 @@ class _HomeState extends State<Home> {
                            
                              cont(Text("Call Sign : ${d.callsign}")),
                             cont(Text("Priority : ${d.priority}")),
-                            cont(Text("EOTS : ${d.eobt}")),
+                            cont(Text("EOBT : ${d.eobt}")),
                             cont(Text("Time : ${d.time}")),
                             cont(Text("Stand : ${d.stand}")),
                             
